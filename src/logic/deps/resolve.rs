@@ -738,6 +738,7 @@ mod tests {
     fn resolve_official_uses_pacman_si_stub() {
         let dir = tempdir().expect("tempdir");
         let _test_guard = crate::logic::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
         let _guard = PathGuard::push(dir.path());
         write_executable(
             dir.path(),
@@ -796,6 +797,7 @@ exit 1
     fn resolve_aur_prefers_paru_stub_and_skips_self() {
         let dir = tempdir().expect("tempdir");
         let _test_guard = crate::logic::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
         let _guard = PathGuard::push(dir.path());
         write_executable(
             dir.path(),

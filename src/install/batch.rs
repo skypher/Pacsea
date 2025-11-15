@@ -274,6 +274,8 @@ mod tests {
     /// Details:
     /// - Overrides `PATH` and environment variables, then restores them to avoid leaking state across tests.
     fn install_batch_uses_gnome_terminal_double_dash() {
+        let _path_guard = crate::test_utils::lock_path_mutex();
+
         use std::fs;
         use std::os::unix::fs::PermissionsExt;
         use std::path::PathBuf;

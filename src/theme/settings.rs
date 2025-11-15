@@ -771,6 +771,8 @@ mod tests {
     /// Details:
     /// - Overrides `HOME` to a temp dir and restores it afterwards to avoid polluting the user environment.
     fn settings_parse_values_and_keybinds_with_defaults_on_invalid_sum() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         let _guard = crate::theme::lock_test_mutex();
         let orig_home = std::env::var_os("HOME");
         let base = std::env::temp_dir().join(format!(

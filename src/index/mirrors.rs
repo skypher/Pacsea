@@ -368,6 +368,7 @@ exit 1
     /// What: Ensure Windows index refresh consumes API responses, persists, and notifies without errors.
     async fn refresh_official_index_from_arch_api_consumes_api_results_and_persists() {
         let _guard = crate::index::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
 
         if let Ok(mut g) = super::idx().write() {
             g.pkgs.clear();

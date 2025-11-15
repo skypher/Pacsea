@@ -118,6 +118,7 @@ mod tests {
     /// - Exercises the async refresh path, ensures PATH is restored, and verifies cache contents via helper accessors.
     async fn refresh_installed_cache_populates_cache_from_pacman_output() {
         let _guard = crate::index::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
 
         if let Ok(mut g) = super::installed_lock().write() {
             g.clear();

@@ -632,6 +632,8 @@ mod tests {
     /// Details:
     /// - Uses a mutex guard to serialise environment mutations and restores `HOME` at the end to avoid cross-test interference.
     fn app_state_default_initializes_paths_and_flags() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         let _guard = crate::state::lock_test_mutex();
         // Shim HOME so lists_dir() resolves under a temp dir
         let orig_home = std::env::var_os("HOME");

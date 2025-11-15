@@ -2,6 +2,9 @@
 
 pub mod app;
 
+#[cfg(test)]
+mod test_utils;
+
 pub mod events;
 pub mod i18n;
 pub mod index;

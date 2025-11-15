@@ -237,6 +237,8 @@ mod tests {
     /// Details:
     /// - Redirects `HOME`, guards with the theme mutex, and removes the temp directory after assertions.
     fn load_returns_defaults_when_config_missing() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         let _guard = crate::theme::lock_test_mutex();
         use std::fs;
         use std::path::PathBuf;
@@ -293,6 +295,8 @@ mod tests {
     /// Details:
     /// - Writes `pattern.conf` under Pacsea's config directory, then restores environment variables and removes artifacts.
     fn load_reads_pattern_conf_overrides() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         let _guard = crate::theme::lock_test_mutex();
         use std::fs;
         use std::path::PathBuf;
@@ -354,6 +358,8 @@ mod tests {
     /// Details:
     /// - Exercises the early-return path that clones defaults for each severity bucket.
     fn parse_uses_defaults_when_empty() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         let d = PatternSets::default();
         let p = parse("", &d);
         assert_eq!(p.critical, d.critical);
@@ -374,6 +380,8 @@ mod tests {
     /// Details:
     /// - Verifies each severity bucket independently to catch regressions in join order.
     fn parse_joins_lines_with_or() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         let d = PatternSets::default();
         let cfg = r#"
             [critical]
@@ -411,6 +419,8 @@ mod tests {
     /// Details:
     /// - Confirms default fallback remains for untouched severities while demonstrating indentation trimming for `low`.
     fn parse_handles_comments_and_whitespace() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         let d = PatternSets::default();
         let cfg = r#"
             # comment

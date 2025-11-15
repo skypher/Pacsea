@@ -72,6 +72,7 @@ mod tests {
     #[test]
     fn explicit_names_returns_empty_when_uninitialized() {
         let _guard = crate::index::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
         // Ensure empty state
         if let Ok(mut g) = super::explicit_lock().write() {
             g.clear();
@@ -93,6 +94,7 @@ mod tests {
     #[test]
     fn explicit_names_returns_cloned_set() {
         let _guard = crate::index::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
         if let Ok(mut g) = super::explicit_lock().write() {
             g.clear();
             g.insert("a".to_string());
@@ -120,6 +122,7 @@ mod tests {
     /// - Verifies the async refresh reads command output, updates the cache, and the cache contents persist after restoring PATH.
     async fn refresh_explicit_cache_populates_cache_from_pacman_output() {
         let _guard = crate::index::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
 
         if let Ok(mut g) = super::explicit_lock().write() {
             g.clear();

@@ -22,6 +22,8 @@ mod tests {
     /// Details:
     /// - Uses temporary directories to avoid touching user configuration and cleans them up afterwards.
     fn config_try_load_theme_success_and_errors() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         use std::fs;
         use std::io::Write;
         use std::path::PathBuf;
@@ -68,6 +70,8 @@ mod tests {
     /// - Ensures the skeleton can be loaded without errors.
     /// - Tests that a generated skeleton file contains all required keys.
     fn config_theme_skeleton_completeness() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         use std::collections::HashSet;
         use std::fs;
 
@@ -198,6 +202,8 @@ mod tests {
     /// Details:
     /// - Manipulates `HOME`/`XDG_CONFIG_HOME` to isolate test data and cleans up generated files on completion.
     fn config_settings_comprehensive_parameter_check() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         use std::collections::HashSet;
         use std::fs;
 

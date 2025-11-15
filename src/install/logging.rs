@@ -63,6 +63,8 @@ mod tests {
     /// - Temporarily overrides `HOME`, calls both logging functions, then verifies file contents before
     ///   restoring the environment.
     fn logging_writes_install_and_remove_logs_under_logs_dir() {
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
         use std::fs;
         use std::path::PathBuf;
         // Shim HOME to temp so logs_dir resolves within it
