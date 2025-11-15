@@ -120,16 +120,16 @@ use crate::state::Source;
 ///
 /// Order:
 ///
-/// - `core` => 0
-/// - `extra` => 1
+/// - `core` / `system` (Artix) => 0
+/// - `extra` / `world` (Artix) => 1
 /// - other official repos => 2
 /// - AUR => 3
 pub fn repo_order(src: &Source) -> u8 {
     match src {
         Source::Official { repo, .. } => {
-            if repo.eq_ignore_ascii_case("core") {
+            if repo.eq_ignore_ascii_case("core") || repo.eq_ignore_ascii_case("system") {
                 0
-            } else if repo.eq_ignore_ascii_case("extra") {
+            } else if repo.eq_ignore_ascii_case("extra") || repo.eq_ignore_ascii_case("world") {
                 1
             } else {
                 2
@@ -538,6 +538,58 @@ mod tests {
         assert_eq!(match_rank("ripgrep", "rip"), 1);
         assert_eq!(match_rank("ripgrep", "pg"), 2);
         assert_eq!(match_rank("ripgrep", "zzz"), 3);
+    }
+
+    #[test]
+    /// What: Verify Artix repository ordering matches Arch equivalents.
+    ///
+    /// Inputs:
+    /// - Artix repos: system, world, galaxy
+    /// - Arch repos: core, extra, community
+    ///
+    /// Output:
+    /// - system has same priority as core (0)
+    /// - world has same priority as extra (1)
+    /// - galaxy has same priority as other repos (2)
+    ///
+    /// Details:
+    /// - Ensures Artix repositories are treated equivalently to their Arch counterparts.
+    fn util_artix_repo_order() {
+        let system = Source::Official {
+            repo: "system".into(),
+            arch: "x86_64".into(),
+        };
+        let world = Source::Official {
+            repo: "world".into(),
+            arch: "x86_64".into(),
+        };
+        let galaxy = Source::Official {
+            repo: "galaxy".into(),
+            arch: "x86_64".into(),
+        };
+        let core = Source::Official {
+            repo: "core".into(),
+            arch: "x86_64".into(),
+        };
+        let extra = Source::Official {
+            repo: "extra".into(),
+            arch: "x86_64".into(),
+        };
+
+        // Artix system should have same priority as Arch core
+        assert_eq!(repo_order(&system), repo_order(&core));
+        assert_eq!(repo_order(&system), 0);
+
+        // Artix world should have same priority as Arch extra
+        assert_eq!(repo_order(&world), repo_order(&extra));
+        assert_eq!(repo_order(&world), 1);
+
+        // Artix galaxy should be treated like other repos
+        assert_eq!(repo_order(&galaxy), 2);
+
+        // Verify ordering: system < world < galaxy
+        assert!(repo_order(&system) < repo_order(&world));
+        assert!(repo_order(&world) < repo_order(&galaxy));
     }
 
     #[test]

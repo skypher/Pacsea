@@ -60,6 +60,21 @@ pub fn is_cachyos_repo(repo: &str) -> bool {
     r.starts_with("cachyos")
 }
 
+/// What: Check if a repo name is an Artix Linux repo
+///
+/// Input:
+/// - `repo` repository name
+///
+/// Output:
+/// - `true` for "system", "world", or "galaxy" (case-insensitive)
+///
+/// Details:
+/// - Lowercases and matches exact names for Artix repositories.
+pub fn is_artix_repo(repo: &str) -> bool {
+    let r = repo.to_lowercase();
+    r == "system" || r == "world" || r == "galaxy"
+}
+
 #[cfg(not(target_os = "windows"))]
 /// What: Known EndeavourOS repo names usable with pacman -Sl
 ///
@@ -92,6 +107,18 @@ pub fn cachyos_repo_names() -> &'static [&'static str] {
         "cachyos-core-v4",
         "cachyos-extra-v4",
     ]
+}
+
+#[cfg(not(target_os = "windows"))]
+/// What: Known Artix Linux repo names usable with pacman -Sl
+///
+/// Output:
+/// - Static slice of repo names
+///
+/// Details:
+/// - Returns ["system", "world", "galaxy"] for Artix's main repositories.
+pub fn artix_repo_names() -> &'static [&'static str] {
+    &["system", "world", "galaxy"]
 }
 
 /// What: Heuristic to treat a name as EndeavourOS-branded
@@ -163,6 +190,28 @@ mod tests {
         assert!(super::is_cachyos_repo("cachyos-core"));
         assert!(super::is_cachyos_repo("CachyOS-extra"));
         assert!(!super::is_cachyos_repo("extra"));
+    }
+
+    #[test]
+    /// What: Verify Artix repository detection.
+    ///
+    /// Inputs:
+    /// - Various repo strings for Artix repositories and non-Artix repos.
+    ///
+    /// Output:
+    /// - Assertions that only Artix repos return true.
+    ///
+    /// Details:
+    /// - Checks case-insensitive matching for system, world, and galaxy.
+    fn artix_repo_rules() {
+        assert!(super::is_artix_repo("system"));
+        assert!(super::is_artix_repo("System"));
+        assert!(super::is_artix_repo("world"));
+        assert!(super::is_artix_repo("World"));
+        assert!(super::is_artix_repo("galaxy"));
+        assert!(super::is_artix_repo("Galaxy"));
+        assert!(!super::is_artix_repo("core"));
+        assert!(!super::is_artix_repo("extra"));
     }
 
     #[test]
