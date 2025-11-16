@@ -66,13 +66,13 @@ pub fn is_cachyos_repo(repo: &str) -> bool {
 /// - `repo` repository name
 ///
 /// Output:
-/// - `true` for "system", "world", or "galaxy" (case-insensitive)
+/// - `true` for "system", "world", "galaxy", or "lib32" (case-insensitive)
 ///
 /// Details:
 /// - Lowercases and matches exact names for Artix repositories.
 pub fn is_artix_repo(repo: &str) -> bool {
     let r = repo.to_lowercase();
-    r == "system" || r == "world" || r == "galaxy"
+    r == "system" || r == "world" || r == "galaxy" || r == "lib32"
 }
 
 #[cfg(not(target_os = "windows"))]
@@ -116,9 +116,9 @@ pub fn cachyos_repo_names() -> &'static [&'static str] {
 /// - Static slice of repo names
 ///
 /// Details:
-/// - Returns ["system", "world", "galaxy"] for Artix's main repositories.
+/// - Returns ["system", "world", "galaxy", "lib32"] for Artix's main repositories.
 pub fn artix_repo_names() -> &'static [&'static str] {
-    &["system", "world", "galaxy"]
+    &["system", "world", "galaxy", "lib32"]
 }
 
 /// What: Heuristic to treat a name as EndeavourOS-branded
@@ -202,7 +202,7 @@ mod tests {
     /// - Assertions that only Artix repos return true.
     ///
     /// Details:
-    /// - Checks case-insensitive matching for system, world, and galaxy.
+    /// - Checks case-insensitive matching for system, world, galaxy, and lib32.
     fn artix_repo_rules() {
         assert!(super::is_artix_repo("system"));
         assert!(super::is_artix_repo("System"));
@@ -210,6 +210,8 @@ mod tests {
         assert!(super::is_artix_repo("World"));
         assert!(super::is_artix_repo("galaxy"));
         assert!(super::is_artix_repo("Galaxy"));
+        assert!(super::is_artix_repo("lib32"));
+        assert!(super::is_artix_repo("Lib32"));
         assert!(!super::is_artix_repo("core"));
         assert!(!super::is_artix_repo("extra"));
     }
