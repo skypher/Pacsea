@@ -157,6 +157,8 @@ mod tests {
     /// Details:
     /// - Restores the original `PATH` and cleans up the temporary directory after assertions.
     fn utils_command_on_path_detects_executable() {
+        let _path_guard = crate::test_utils::lock_path_mutex();
+
         use std::fs;
         use std::os::unix::fs::PermissionsExt;
         use std::path::PathBuf;
@@ -205,6 +207,8 @@ mod tests {
     /// Details:
     /// - Saves and restores the `PATH` environment variable while ensuring the temp directory is removed.
     fn utils_choose_terminal_index_prefers_first_present_in_terms_order() {
+        let _path_guard = crate::test_utils::lock_path_mutex();
+
         use std::fs;
         use std::os::unix::fs::PermissionsExt;
         use std::path::PathBuf;

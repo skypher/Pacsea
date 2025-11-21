@@ -215,7 +215,9 @@ mod tests {
     /// Details:
     /// - Restores the original `HOME` afterwards to avoid polluting the real configuration tree.
     fn paths_config_lists_logs_under_home() {
-        let _guard = crate::theme::test_mutex().lock().unwrap();
+        let _home_guard = crate::test_utils::lock_home_mutex();
+
+        let _guard = crate::theme::lock_test_mutex();
         let orig_home = std::env::var_os("HOME");
         let base = std::env::temp_dir().join(format!(
             "pacsea_test_paths_{}_{}",

@@ -71,7 +71,8 @@ mod tests {
     /// - Confirms the helper gracefully handles uninitialized state.
     #[test]
     fn explicit_names_returns_empty_when_uninitialized() {
-        let _guard = crate::index::test_mutex().lock().unwrap();
+        let _guard = crate::index::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
         // Ensure empty state
         if let Ok(mut g) = super::explicit_lock().write() {
             g.clear();
@@ -92,7 +93,8 @@ mod tests {
     /// - Ensures cloning semantics (rather than references) are preserved.
     #[test]
     fn explicit_names_returns_cloned_set() {
-        let _guard = crate::index::test_mutex().lock().unwrap();
+        let _guard = crate::index::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
         if let Ok(mut g) = super::explicit_lock().write() {
             g.clear();
             g.insert("a".to_string());
@@ -119,7 +121,8 @@ mod tests {
     /// Details:
     /// - Verifies the async refresh reads command output, updates the cache, and the cache contents persist after restoring PATH.
     async fn refresh_explicit_cache_populates_cache_from_pacman_output() {
-        let _guard = crate::index::test_mutex().lock().unwrap();
+        let _guard = crate::index::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
 
         if let Ok(mut g) = super::explicit_lock().write() {
             g.clear();

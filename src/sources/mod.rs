@@ -70,3 +70,10 @@ static TEST_MUTEX: std::sync::OnceLock<std::sync::Mutex<()>> = std::sync::OnceLo
 pub(crate) fn test_mutex() -> &'static std::sync::Mutex<()> {
     TEST_MUTEX.get_or_init(|| std::sync::Mutex::new(()))
 }
+
+#[cfg(not(target_os = "windows"))]
+#[cfg(test)]
+/// What: Acquire test mutex lock with automatic poison recovery.
+pub(crate) fn lock_test_mutex() -> std::sync::MutexGuard<'static, ()> {
+    test_mutex().lock().unwrap_or_else(|e| e.into_inner())
+}

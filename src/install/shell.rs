@@ -376,6 +376,8 @@ mod tests {
     /// - Rewrites `PATH` to point at a fake executable that records arguments, then restores env vars
     ///   after spawning the terminal command.
     fn shell_uses_gnome_terminal_double_dash() {
+        let _path_guard = crate::test_utils::lock_path_mutex();
+
         use std::fs;
         use std::os::unix::fs::PermissionsExt;
         use std::path::PathBuf;

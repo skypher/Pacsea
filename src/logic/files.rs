@@ -1454,7 +1454,8 @@ backup = /etc/more.conf
     /// Details:
     /// - Uses a temporary PATH override and the global test mutex to isolate command stubbing from other tests.
     fn resolve_install_files_marks_changed_and_new_entries() {
-        let _test_guard = crate::logic::test_mutex().lock().unwrap();
+        let _test_guard = crate::logic::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
         let dir = tempdir().expect("tempdir");
         let _path_guard = PathGuard::push(dir.path());
         write_executable(
@@ -1534,7 +1535,8 @@ exit 1
     /// Details:
     /// - Shares the PATH guard helper to ensure the stubbed command remains isolated per test.
     fn resolve_remove_files_marks_pacsave_candidates() {
-        let _test_guard = crate::logic::test_mutex().lock().unwrap();
+        let _test_guard = crate::logic::lock_test_mutex();
+        let _path_guard = crate::test_utils::lock_path_mutex();
         let dir = tempdir().expect("tempdir");
         let _path_guard = PathGuard::push(dir.path());
         write_executable(

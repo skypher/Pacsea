@@ -360,6 +360,8 @@ mod tests {
     /// - Setup: Empty PATH; set WAYLAND_DISPLAY
     /// - Expect: A row "Clipboard: wl-clipboard" with note "Wayland", not installed and selectable
     fn optional_deps_rows_wayland_shows_wl_clipboard() {
+        let _path_guard = crate::test_utils::lock_path_mutex();
+
         use std::fs;
         use std::path::PathBuf;
 
