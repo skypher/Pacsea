@@ -201,7 +201,7 @@ mod tests {
         use std::collections::HashSet;
         use std::fs;
 
-        let _guard = crate::theme::test_mutex().lock().unwrap();
+        let _guard = crate::theme::lock_test_mutex();
         let orig_home = std::env::var_os("HOME");
         let orig_xdg = std::env::var_os("XDG_CONFIG_HOME");
 

@@ -136,6 +136,19 @@ static TEST_MUTEX: OnceLock<std::sync::Mutex<()>> = OnceLock::new();
 ///
 /// Details:
 /// - Ensures tests manipulating the global index do not run concurrently, preventing races.
+/// - Use `lock_test_mutex()` helper to acquire lock with poison recovery.
 pub(crate) fn test_mutex() -> &'static std::sync::Mutex<()> {
     TEST_MUTEX.get_or_init(|| std::sync::Mutex::new(()))
+}
+
+#[cfg(test)]
+/// What: Acquire test mutex lock with automatic poison recovery.
+///
+/// Output:
+/// - `MutexGuard<()>` that works even if mutex was poisoned by a panicked test.
+///
+/// Details:
+/// - Recovers poisoned mutex instead of panicking, allowing tests to continue.
+pub(crate) fn lock_test_mutex() -> std::sync::MutexGuard<'static, ()> {
+    test_mutex().lock().unwrap_or_else(|e| e.into_inner())
 }
